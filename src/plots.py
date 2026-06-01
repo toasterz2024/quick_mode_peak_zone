@@ -60,26 +60,50 @@ def plot_height_with_events(
     plateau_start = session_metrics.get("peak_start_time")
     plateau_end = session_metrics.get("peak_end_time")
     if plateau_start is not None and plateau_end is not None:
-        fig.add_vrect(
+        fig.add_shape(
+            type="rect",
             x0=plateau_start,
             x1=plateau_end,
+            y0=0,
+            y1=1,
+            yref="paper",
             fillcolor="#2ca02c",
             opacity=0.08,
             layer="below",
             line_width=0,
-            annotation_text="peak plateau",
-            annotation_position="top left",
+        )
+        fig.add_annotation(
+            x=plateau_start,
+            y=1.02,
+            yref="paper",
+            text="peak plateau",
+            showarrow=False,
+            xanchor="left",
+            font={"size": 11, "color": "#2ca02c"},
         )
 
     for key, color in _EVENT_COLORS.items():
         value = session_metrics.get(key)
         if value is None or pd.isna(value):
             continue
-        fig.add_vline(
-            x=value,
+        fig.add_shape(
+            type="line",
+            x0=value,
+            x1=value,
+            y0=0,
+            y1=1,
+            yref="paper",
             line={"color": color, "dash": "dash"},
-            annotation_text=key,
-            annotation_position="top right",
+        )
+        fig.add_annotation(
+            x=value,
+            y=1.0,
+            yref="paper",
+            text=key,
+            showarrow=False,
+            xanchor="left",
+            yanchor="bottom",
+            font={"size": 10, "color": color},
         )
 
     fig.update_layout(
@@ -130,7 +154,15 @@ def plot_manual_trigger_diff_by_session(results_df: pd.DataFrame) -> go.Figure:
             marker_color=colors,
         )
     )
-    fig.add_hline(y=0, line={"color": "#444", "dash": "dash"})
+    fig.add_shape(
+        type="line",
+        x0=0,
+        x1=1,
+        y0=0,
+        y1=0,
+        xref="paper",
+        line={"color": "#444", "dash": "dash"},
+    )
     fig.update_layout(
         xaxis_title="session_id",
         yaxis_title="manual_to_real_peak_diff_minutes",
