@@ -51,51 +51,6 @@ def cached_load_json_log(log_location: str, source_mode: str) -> dict[str, Any]:
 
 
 @st.cache_data(show_spinner=False)
-def cached_process_session(
-    session_id: str,
-    log_location: str,
-    metadata_row_json: str,
-    source_mode: str,
-    peak_plateau_drop_threshold_mm: float,
-    peak_end_below_threshold_minutes: int,
-    manual_trigger_tolerance_minutes: int,
-) -> dict[str, Any]:
-    metadata_row = pd.Series(json.loads(metadata_row_json))
-    for col in (
-        "start_time",
-        "manual_peakzone_entry_time",
-        "real_peak_time_manual",
-        "peak_start_time_manual",
-        "peak_end_time_manual",
-    ):
-        if col in metadata_row.index and metadata_row[col] is not None:
-            try:
-                metadata_row[col] = pd.Timestamp(metadata_row[col])
-            except (ValueError, TypeError):
-                metadata_row[col] = None
-
-    try:
-        raw = cached_load_json_log(log_location, source_mode)
-        df = normalize_log_to_dataframe(raw, session_id=session_id)
-        metadata_row = _merge_with_log_metadata(metadata_row, raw, df)
-        load_error: str | None = None
-    except DataLoadError as exc:
-        df = None
-        load_error = (
-            "missing_log_file" if "not found" in str(exc).lower() else "invalid_log_format"
-        )
-
-    return calculate_session_metrics(
-        df,
-        metadata_row,
-        peak_plateau_drop_threshold_mm=peak_plateau_drop_threshold_mm,
-        peak_end_below_threshold_minutes=peak_end_below_threshold_minutes,
-        manual_trigger_tolerance_minutes=manual_trigger_tolerance_minutes,
-        load_error=load_error,
-    )
-
-
-@st.cache_data(show_spinner=False)
 def cached_process_all_sessions(
     metadata_location: str,
     source_mode: str,
@@ -109,6 +64,7 @@ def cached_process_all_sessions(
         session_id = str(row.get("session_id", "")).strip()
         if not session_id:
             continue
+
         log_file = row.get("log_file")
         if not isinstance(log_file, str) or not log_file:
             rows.append(
@@ -123,15 +79,28 @@ def cached_process_all_sessions(
             )
             continue
 
+        try:
+            raw = cached_load_json_log(log_file, source_mode)
+            df = normalize_log_to_dataframe(raw, session_id=session_id)
+            merged_row = _merge_with_log_metadata(row, raw, df)
+            load_error: str | None = None
+        except DataLoadError as exc:
+            df = None
+            merged_row = row
+            load_error = (
+                "missing_log_file"
+                if "not found" in str(exc).lower()
+                else "invalid_log_format"
+            )
+
         rows.append(
-            cached_process_session(
-                session_id=session_id,
-                log_location=log_file,
-                metadata_row_json=row.to_json(date_format="iso"),
-                source_mode=source_mode,
+            calculate_session_metrics(
+                df,
+                merged_row,
                 peak_plateau_drop_threshold_mm=peak_plateau_drop_threshold_mm,
                 peak_end_below_threshold_minutes=peak_end_below_threshold_minutes,
                 manual_trigger_tolerance_minutes=manual_trigger_tolerance_minutes,
+                load_error=load_error,
             )
         )
     return pd.DataFrame(rows)
@@ -318,16 +287,48 @@ def _session_detail_tab(
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("validation_status", str(record.get("validation_status")))
     c2.metric(
-        "manual_to_real_peak_diff (min)",
-        _fmt(record.get("manual_to_real_peak_diff_minutes")),
+        "manual_entry_layer2_valid",
+        str(record.get("manual_entry_layer2_valid")),
     )
     c3.metric(
         "peak_duration (min)", _fmt(record.get("peak_duration_minutes"))
     )
+    failed_conds = record.get("failed_conditions_at_manual_entry")
     c4.metric(
-        "manual_entry_layer2_valid",
-        str(record.get("manual_entry_layer2_valid")),
+        "failed conditions",
+        str(failed_conds) if failed_conds else "—",
     )
+
+    st.markdown("### Timing comparison")
+    t1, t2, t3 = st.columns(3)
+    t1.metric(
+        "manual Peak Zone entry",
+        _fmt_time(record.get("manual_peakzone_entry_time")),
+    )
+    t2.metric(
+        "real peak time (computed)",
+        _fmt_time(record.get("real_peak_time")),
+    )
+    diff_val = record.get("manual_to_real_peak_diff_minutes")
+    t3.metric(
+        "diff: manual − real peak (min)",
+        _fmt(diff_val),
+        help=(
+            "Negative = manual trigger BEFORE real peak (device decided early).\n"
+            "Positive = manual trigger AFTER real peak (device decided late)."
+        ),
+    )
+    if diff_val is not None and not pd.isna(diff_val):
+        if diff_val < -0.5:
+            st.info(
+                f"Manual trigger fired **{abs(diff_val):.1f} min before** the real peak."
+            )
+        elif diff_val > 0.5:
+            st.warning(
+                f"Manual trigger fired **{diff_val:.1f} min after** the real peak."
+            )
+        else:
+            st.success("Manual trigger matched the real peak (within 30 s).")
 
     if df is not None and not df.empty:
         st.plotly_chart(
@@ -374,25 +375,6 @@ def _session_detail_tab(
         },
     ]
     st.dataframe(pd.DataFrame(condition_rows), use_container_width=True)
-
-
-def _manual_validation_tab(results_df: pd.DataFrame) -> None:
-    st.subheader("Manual Trigger Validation")
-    if results_df.empty:
-        st.info("No sessions to display.")
-        return
-
-    cols = [
-        "session_id",
-        "manual_peakzone_entry_time",
-        "nearest_log_timestamp_to_manual_trigger",
-        "manual_trigger_timestamp_diff_seconds",
-        "manual_entry_layer2_valid",
-        "validation_status",
-        "failed_conditions_at_manual_entry",
-    ]
-    available = [c for c in cols if c in results_df.columns]
-    st.dataframe(results_df[available], use_container_width=True)
 
 
 def _all_sessions_tab(results_df: pd.DataFrame) -> None:
@@ -653,11 +635,10 @@ def main() -> None:
 
     filtered = _apply_filters(results_df, metadata_df)
 
-    overview, detail, validation, all_sessions, add_session = st.tabs(
+    overview, detail, all_sessions, add_session = st.tabs(
         [
             "Overview",
             "Session Detail",
-            "Manual Trigger Validation",
             "All Sessions",
             "Add Session",
         ]
@@ -666,8 +647,6 @@ def main() -> None:
         _overview_tab(filtered)
     with detail:
         _session_detail_tab(filtered, sidebar)
-    with validation:
-        _manual_validation_tab(filtered)
     with all_sessions:
         _all_sessions_tab(filtered)
     with add_session:
