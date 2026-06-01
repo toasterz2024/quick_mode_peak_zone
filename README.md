@@ -98,22 +98,56 @@ pip install -r requirements.txt
 
 ## Метаданные
 
-Файл `data/metadata/sessions_metadata.csv`:
+Файл `data/metadata/sessions_metadata.json` — массив объектов.
 
-| Колонка | Назначение |
-|---|---|
-| `session_id` | Уникальный ID сессии |
-| `log_file` | Имя JSON-файла лога |
-| `device_id` | ID устройства |
-| `start_time` | Время старта сессии |
-| `manual_peakzone_entry_time` | **Вручную записанное** время срабатывания Layer 2 |
-| `real_peak_time_manual` | (опционально) Ручное время реального пика |
-| `peak_start_time_manual` | (опционально) Ручное начало плато |
-| `peak_end_time_manual` | (опционально) Ручной конец плато |
-| `mode` | `Quick` / `Auto` / `Delayed` / … |
-| `notes` | Произвольный комментарий |
+**Вручную нужно заполнять только три поля:**
+
+| Поле | Обязательно? | Что писать |
+|---|---|---|
+| `session_id` | да | Уникальный ID (по умолчанию = имя файла без `.json`) |
+| `log_file` | да | Имя JSON-файла лога (без `data/logs/`) |
+| `manual_peakzone_entry_time` | да | Время Peak Zone, записанное вручную |
+| `notes` | нет | Произвольный комментарий |
+
+**Авто-извлекается из лога** (писать не нужно):
+- `device_id` — ищется в корне или в секции `metadata` / `meta` / `info` / `session` / `device`
+- `mode` — `mode` / `program` / `recipe` / `cycle`
+- `start_time` / `end_time` — первая и последняя метка времени в записях
+
+**Авто-считается из логов**:
+- `real_peak_time`, `real_peak_height`
+- `peak_start_time`, `peak_end_time`, `peak_duration_minutes`
+- `t100_time`, `t100_reached`
+- Все диагностические значения Layer 2
+
+### Пример
+
+```json
+[
+  {
+    "session_id": "session_005",
+    "log_file": "session_005.json",
+    "manual_peakzone_entry_time": "2026-05-25 16:42:00"
+  },
+  {
+    "session_id": "session_006",
+    "log_file": "session_006.json",
+    "manual_peakzone_entry_time": "2026-05-26 14:10:00",
+    "notes": "Sensor noisy near peak"
+  }
+]
+```
 
 Все naive-таймстемпы трактуются как `Asia/Seoul`. Отдельной колонки timezone нет.
+
+### Не помнишь формат? Используй вкладку **Add Session**
+
+В приложении есть вкладка **Add Session**, которая:
+
+1. Показывает список JSON-файлов в `data/logs/`, которых ещё нет в metadata.
+2. Парсит выбранный лог, показывает `device_id`, `start_time`, `real_peak_time` и график высоты.
+3. Даёт готовый JSON-блок с `session_id` и `log_file` уже заполненными — тебе остаётся только выбрать дату/время Peak Zone (мышью в date/time pickers).
+4. Копируешь блок и вставляешь в `sessions_metadata.json`.
 
 ---
 
@@ -149,16 +183,42 @@ pytest -q
 
 GitHub — это persistent storage для истории сессий (см. спецификацию, раздел 3).
 
-1. Положи JSON-лог в `data/logs/<имя>.json` и добавь строку в `data/metadata/sessions_metadata.csv`.
-2. Закоммить и пушни:
+**Workflow добавления одной сессии:**
+
+1. Положи JSON-лог в `data/logs/<имя>.json`. Минимальный формат:
+
+   ```json
+   {
+     "device_id": "SourFriend-A494",
+     "mode": "Quick",
+     "records": [
+       {"timestamp": "2026-05-25 09:00:00", "height_mm": 18.0, "temperature_c": 26.0},
+       {"timestamp": "2026-05-25 09:05:00", "height_mm": 18.4, "temperature_c": 26.1}
+     ]
+   }
+   ```
+
+   `device_id` и `mode` в корне — опционально (приложение их подтянет). Поддерживаемые алиасы для высоты: `height` / `current_height` / `sensor_height` / `measured_height`; для времени: `time` / `created_at` / `measured_at` / `datetime`. Naive-таймстемпы → `Asia/Seoul`.
+
+2. Закоммить лог и пушни:
 
    ```bash
-   git add data/logs/<имя>.json data/metadata/sessions_metadata.csv
-   git commit -m "data: add session <id>"
+   git add data/logs/<имя>.json
+   git commit -m "data: add log <имя>"
    git push
    ```
 
-3. Streamlit Cloud автоматически перезапустит приложение, и новая сессия появится в дашборде.
+3. Откройся в задеплоенном приложении → вкладка **Add Session**. Там увидишь свой новый лог. Выбери дату/время Peak Zone, скопируй сгенерированный JSON-блок.
+
+4. Вставь блок в `data/metadata/sessions_metadata.json` (внутри массива `[...]`), закоммить и пушни:
+
+   ```bash
+   git add data/metadata/sessions_metadata.json
+   git commit -m "data: register session <id>"
+   git push
+   ```
+
+5. Streamlit Cloud автоматически перезапустит приложение через 1–2 минуты. Можно форсировать в **Manage app → Reboot app**.
 
 ### Альтернативный режим: `github_raw`
 

@@ -12,19 +12,25 @@ import streamlit as st
 import config
 from src.data_loader import (
     DataLoadError,
-    load_all_sessions,
+    _merge_with_log_metadata,
+    extract_log_metadata,
     load_json_log,
     load_metadata,
     normalize_log_to_dataframe,
 )
 from src.metrics import calculate_session_metrics
+from src.peak_analysis import calculate_peak_plateau, get_real_peak
 from src.plots import (
     plot_height_with_events,
     plot_manual_trigger_diff_by_session,
     plot_peak_duration_by_session,
     plot_validation_status,
 )
-from src.preprocessing import prepare_session_dataframe
+from src.preprocessing import (
+    calculate_initial_height,
+    calculate_t100_time,
+    prepare_session_dataframe,
+)
 
 st.set_page_config(
     page_title="Peak Zone Manual Trigger Validation",
@@ -71,6 +77,7 @@ def cached_process_session(
     try:
         raw = cached_load_json_log(log_location, source_mode)
         df = normalize_log_to_dataframe(raw, session_id=session_id)
+        metadata_row = _merge_with_log_metadata(metadata_row, raw, df)
         load_error: str | None = None
     except DataLoadError as exc:
         df = None
@@ -404,6 +411,167 @@ def _all_sessions_tab(results_df: pd.DataFrame) -> None:
     )
 
 
+def _add_session_tab(
+    metadata_df: pd.DataFrame,
+    sidebar: dict[str, Any],
+) -> None:
+    st.subheader("Add new session")
+    st.caption(
+        "Pick a log that is not yet registered in metadata. The app extracts "
+        "device, start/end time and real peak from the log, and gives you a "
+        "ready-to-paste JSON entry. You only need to set the Peak Zone trigger time."
+    )
+
+    if sidebar["source_mode"] != "local":
+        st.info(
+            "This helper currently works in `local` mode only. "
+            "Switch the data source in the sidebar."
+        )
+        return
+
+    logs_dir = config.LOCAL_LOGS_DIR
+    if not logs_dir.exists():
+        st.error(f"Logs directory not found: `{logs_dir}`")
+        return
+
+    all_logs = sorted(p.name for p in logs_dir.glob("*.json"))
+    if not all_logs:
+        st.info(f"No JSON logs found in `{logs_dir}`. Add a file and refresh.")
+        return
+
+    registered: set[str] = set()
+    if not metadata_df.empty and "log_file" in metadata_df.columns:
+        registered = {f for f in metadata_df["log_file"].dropna().tolist() if f}
+
+    unregistered = [f for f in all_logs if f not in registered]
+    if not unregistered:
+        st.success(
+            "All logs in `data/logs/` are already registered. "
+            "Push a new log file to GitHub to see it here."
+        )
+        return
+
+    log_file = st.selectbox(
+        f"Unregistered logs ({len(unregistered)})", options=unregistered
+    )
+    if log_file is None:
+        return
+
+    try:
+        raw = cached_load_json_log(log_file, "local")
+        df = prepare_session_dataframe(
+            normalize_log_to_dataframe(raw, session_id=Path(log_file).stem)
+        )
+    except DataLoadError as exc:
+        st.error(f"Failed to load log: {exc}")
+        return
+    except Exception as exc:  # pragma: no cover - defensive
+        st.error(f"Unexpected error parsing log: {exc}")
+        return
+
+    if df.empty:
+        st.error("Log contains no usable records.")
+        return
+
+    log_meta = extract_log_metadata(raw, df)
+    initial_height = calculate_initial_height(df)
+    t100_time = calculate_t100_time(df, initial_height)
+    peak = get_real_peak(df, metadata_row=None)
+    plateau = calculate_peak_plateau(
+        df,
+        peak.get("real_peak_time"),
+        peak.get("real_peak_height"),
+        drop_threshold_mm=sidebar["drop_threshold"],
+        end_below_threshold_minutes=sidebar["end_below_minutes"],
+    )
+
+    st.markdown("### Auto-extracted info")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("device_id", log_meta.get("device_id") or "—")
+    c2.metric("mode", log_meta.get("mode") or "—")
+    c3.metric(
+        "duration (h)",
+        f"{(df['timestamp'].iloc[-1] - df['timestamp'].iloc[0]).total_seconds() / 3600:.1f}",
+    )
+
+    c4, c5, c6 = st.columns(3)
+    c4.metric("start_time", str(log_meta.get("start_time") or "—"))
+    c5.metric("end_time", str(log_meta.get("end_time") or "—"))
+    c6.metric("t100_time", str(t100_time) if t100_time is not None else "not reached")
+
+    c7, c8, c9 = st.columns(3)
+    c7.metric("real_peak_time", str(peak.get("real_peak_time") or "—"))
+    c8.metric(
+        "real_peak_height",
+        f"{peak.get('real_peak_height'):.2f} mm" if peak.get("real_peak_height") else "—",
+    )
+    c9.metric(
+        "peak_duration (min)", _fmt(plateau.get("peak_duration_minutes"))
+    )
+
+    chart_events = {
+        "real_peak_time": peak.get("real_peak_time"),
+        "t100_time": t100_time,
+        "peak_start_time": plateau.get("peak_start_time"),
+        "peak_end_time": plateau.get("peak_end_time"),
+    }
+    st.plotly_chart(plot_height_with_events(df, chart_events), use_container_width=True)
+
+    st.divider()
+    st.markdown("### Set manual Peak Zone trigger time")
+    st.caption(
+        "Use the chart above to locate when the device/app reported Peak Zone entry. "
+        "By default we pre-fill the value with the calculated real peak time — adjust it."
+    )
+
+    default_dt = peak.get("real_peak_time") or df["timestamp"].iloc[-1]
+    if hasattr(default_dt, "tz_convert"):
+        default_dt = default_dt.tz_convert(config.DEFAULT_TIMEZONE)
+
+    c_date, c_time = st.columns(2)
+    picked_date = c_date.date_input("Date", value=default_dt.date())
+    picked_time = c_time.time_input("Time", value=default_dt.time())
+
+    manual_trigger = pd.Timestamp.combine(
+        picked_date, picked_time
+    ).tz_localize(config.DEFAULT_TIMEZONE)
+
+    notes_value = st.text_input("notes (optional)", value="")
+
+    suggested_session_id = Path(log_file).stem
+    custom_session_id = st.text_input(
+        "session_id (default = filename without .json)",
+        value=suggested_session_id,
+    )
+
+    entry: dict[str, Any] = {
+        "session_id": custom_session_id.strip() or suggested_session_id,
+        "log_file": log_file,
+        "manual_peakzone_entry_time": manual_trigger.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    if notes_value.strip():
+        entry["notes"] = notes_value.strip()
+
+    st.divider()
+    st.markdown(
+        "### Copy this entry into `data/metadata/sessions_metadata.json`"
+    )
+    st.code(json.dumps(entry, indent=2, ensure_ascii=False), language="json")
+
+    st.markdown(
+        "**Steps to publish:**\n\n"
+        "1. Open `data/metadata/sessions_metadata.json` in your editor.\n"
+        "2. Add this object to the JSON array `[...]` (don't forget the comma between entries).\n"
+        "3. Commit and push:\n"
+        "   ```bash\n"
+        f"   git add data/metadata/sessions_metadata.json data/logs/{log_file}\n"
+        f"   git commit -m \"data: add session {entry['session_id']}\"\n"
+        "   git push\n"
+        "   ```\n"
+        "4. Streamlit Cloud redeploys automatically in 1–2 minutes."
+    )
+
+
 def _fmt(value: Any) -> str:
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return "—"
@@ -443,8 +611,14 @@ def main() -> None:
 
     filtered = _apply_filters(results_df, metadata_df)
 
-    overview, detail, validation, all_sessions = st.tabs(
-        ["Overview", "Session Detail", "Manual Trigger Validation", "All Sessions"]
+    overview, detail, validation, all_sessions, add_session = st.tabs(
+        [
+            "Overview",
+            "Session Detail",
+            "Manual Trigger Validation",
+            "All Sessions",
+            "Add Session",
+        ]
     )
     with overview:
         _overview_tab(filtered)
@@ -454,6 +628,8 @@ def main() -> None:
         _manual_validation_tab(filtered)
     with all_sessions:
         _all_sessions_tab(filtered)
+    with add_session:
+        _add_session_tab(metadata_df, sidebar)
 
 
 if __name__ == "__main__":

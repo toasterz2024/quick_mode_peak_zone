@@ -1,4 +1,4 @@
-"""Data loading for metadata CSV and JSON session logs.
+"""Data loading for metadata JSON and JSON session logs.
 
 Supports two modes:
 - ``local``: reads from the local ``data/`` directory.
@@ -7,11 +7,15 @@ Supports two modes:
 The normalized DataFrame always contains at least these columns:
 ``timestamp`` (timezone-aware, Asia/Seoul), ``elapsed_minutes``, ``height_mm``,
 ``session_id``. Optional columns: ``temperature_c``, ``stage``.
+
+Metadata is now stored as a JSON array (``sessions_metadata.json``). The user
+manually writes only ``manual_peakzone_entry_time`` (and optionally ``notes``);
+``session_id``, ``device_id``, ``start_time`` and ``mode`` are auto-extracted
+from the log file.
 """
 
 from __future__ import annotations
 
-import io
 import json
 import logging
 from pathlib import Path
@@ -37,13 +41,17 @@ from config import (
 
 logger = logging.getLogger(__name__)
 
-METADATA_TIMESTAMP_COLUMNS = (
-    "start_time",
+METADATA_TIMESTAMP_FIELDS = (
     "manual_peakzone_entry_time",
     "real_peak_time_manual",
     "peak_start_time_manual",
     "peak_end_time_manual",
+    "start_time",
 )
+
+DEVICE_ID_KEYS = ("device_id", "device", "device_name", "deviceId", "serial", "serial_number")
+MODE_KEYS = ("mode", "program", "recipe", "cycle", "fermentation_mode")
+NESTED_METADATA_KEYS = ("metadata", "meta", "info", "session", "device")
 
 
 class DataLoadError(Exception):
@@ -72,16 +80,45 @@ def load_metadata(
     *,
     source_mode: str = "local",
 ) -> pd.DataFrame:
-    """Load the sessions metadata CSV and normalize timestamps to Asia/Seoul."""
+    """Load the sessions metadata JSON and normalize timestamps to Asia/Seoul.
+
+    The expected format is a JSON array of objects. Required keys per object:
+    ``session_id``, ``log_file``, ``manual_peakzone_entry_time``. Optional keys:
+    ``notes`` (or any of the historical fields like ``real_peak_time_manual``
+    if the user wants to override auto-extracted values).
+    """
     if metadata_location is None:
         metadata_location = (
             GITHUB_METADATA_PATH if source_mode == "github_raw" else LOCAL_METADATA_PATH
         )
 
     text = _fetch_text(metadata_location, source_mode=source_mode)
-    df = pd.read_csv(io.StringIO(text))
+    try:
+        payload = json.loads(text) if text.strip() else []
+    except json.JSONDecodeError as exc:
+        raise DataLoadError(f"Invalid metadata JSON: {exc}") from exc
 
-    for col in METADATA_TIMESTAMP_COLUMNS:
+    if isinstance(payload, dict) and "sessions" in payload:
+        payload = payload["sessions"]
+    if not isinstance(payload, list):
+        raise DataLoadError(
+            "Metadata JSON must be an array of session objects "
+            "(or {\"sessions\": [...]})."
+        )
+
+    if not payload:
+        return pd.DataFrame(
+            columns=[
+                "session_id",
+                "log_file",
+                "manual_peakzone_entry_time",
+                "notes",
+            ]
+        )
+
+    df = pd.DataFrame(payload)
+
+    for col in METADATA_TIMESTAMP_FIELDS:
         if col in df.columns:
             df[col] = _normalize_timestamp_series(
                 df[col], assume_tz=METADATA_TIMEZONE_IF_NAIVE
@@ -92,6 +129,51 @@ def load_metadata(
             df[col] = df[col].astype("string")
 
     return df
+
+
+def extract_log_metadata(
+    raw_json: Any,
+    df: pd.DataFrame | None = None,
+) -> dict[str, Any]:
+    """Pull device_id, mode, start_time and end_time directly from a log.
+
+    The function looks at the JSON root and any nested metadata-like dict
+    (``metadata``, ``meta``, ``info``, ``session``, ``device``). Missing
+    fields are returned as ``None``. ``start_time`` and ``end_time`` are
+    taken from the parsed DataFrame when available.
+    """
+    info: dict[str, Any] = {
+        "device_id": None,
+        "mode": None,
+        "start_time": None,
+        "end_time": None,
+    }
+
+    candidates: list[dict[str, Any]] = []
+    if isinstance(raw_json, dict):
+        candidates.append(raw_json)
+        for key in NESTED_METADATA_KEYS:
+            value = raw_json.get(key)
+            if isinstance(value, dict):
+                candidates.append(value)
+
+    for src in candidates:
+        if info["device_id"] is None:
+            for key in DEVICE_ID_KEYS:
+                if key in src and src[key]:
+                    info["device_id"] = str(src[key])
+                    break
+        if info["mode"] is None:
+            for key in MODE_KEYS:
+                if key in src and src[key]:
+                    info["mode"] = str(src[key])
+                    break
+
+    if df is not None and not df.empty and "timestamp" in df.columns:
+        info["start_time"] = df["timestamp"].iloc[0]
+        info["end_time"] = df["timestamp"].iloc[-1]
+
+    return info
 
 
 def load_json_log(
@@ -169,7 +251,9 @@ def load_all_sessions(
     """Load metadata and every referenced log into one structure.
 
     Returns ``{session_id: {"metadata_row": Series, "log_df": DataFrame | None,
-    "load_error": str | None}}``.
+    "load_error": str | None}}``. ``metadata_row`` already has
+    ``device_id`` / ``mode`` / ``start_time`` merged from the log when not
+    provided manually.
     """
     metadata_df = load_metadata(metadata_location, source_mode=source_mode)
     sessions: dict[str, dict[str, Any]] = {}
@@ -192,7 +276,9 @@ def load_all_sessions(
 
         try:
             raw = load_json_log(log_file, source_mode=source_mode)
-            entry["log_df"] = normalize_log_to_dataframe(raw, session_id=session_id)
+            log_df = normalize_log_to_dataframe(raw, session_id=session_id)
+            entry["log_df"] = log_df
+            entry["metadata_row"] = _merge_with_log_metadata(row, raw, log_df)
         except DataLoadError as exc:
             logger.warning("Failed to load log for %s: %s", session_id, exc)
             entry["load_error"] = (
@@ -205,6 +291,23 @@ def load_all_sessions(
         sessions[session_id] = entry
 
     return sessions
+
+
+def _merge_with_log_metadata(
+    row: pd.Series,
+    raw_json: Any,
+    df: pd.DataFrame,
+) -> pd.Series:
+    """Fill ``device_id`` / ``mode`` / ``start_time`` from the log when absent."""
+    auto = extract_log_metadata(raw_json, df)
+    merged = row.copy()
+    for key, value in auto.items():
+        if value is None:
+            continue
+        existing = merged.get(key) if key in merged.index else None
+        if existing is None or pd.isna(existing) or existing == "":
+            merged[key] = value
+    return merged
 
 
 def _extract_records(raw: Any) -> list[dict[str, Any]]:

@@ -1,0 +1,1354 @@
+{
+  "records": [
+    {
+      "timestamp": "2026-05-20 09:00:00",
+      "height_mm": 20.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:02:00",
+      "height_mm": 20.04,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:04:00",
+      "height_mm": 20.08,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:06:00",
+      "height_mm": 20.12,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:08:00",
+      "height_mm": 20.16,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:10:00",
+      "height_mm": 20.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:12:00",
+      "height_mm": 20.24,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:14:00",
+      "height_mm": 20.28,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:16:00",
+      "height_mm": 20.32,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:18:00",
+      "height_mm": 20.36,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:20:00",
+      "height_mm": 20.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:22:00",
+      "height_mm": 20.44,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:24:00",
+      "height_mm": 20.48,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:26:00",
+      "height_mm": 20.52,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:28:00",
+      "height_mm": 20.56,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:30:00",
+      "height_mm": 20.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:32:00",
+      "height_mm": 20.64,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:34:00",
+      "height_mm": 20.68,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:36:00",
+      "height_mm": 20.72,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:38:00",
+      "height_mm": 20.76,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:40:00",
+      "height_mm": 20.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:42:00",
+      "height_mm": 20.84,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:44:00",
+      "height_mm": 20.88,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:46:00",
+      "height_mm": 20.92,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:48:00",
+      "height_mm": 20.96,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:50:00",
+      "height_mm": 21.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:52:00",
+      "height_mm": 21.04,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:54:00",
+      "height_mm": 21.08,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:56:00",
+      "height_mm": 21.12,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 09:58:00",
+      "height_mm": 21.16,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:00:00",
+      "height_mm": 20.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:02:00",
+      "height_mm": 20.55,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:04:00",
+      "height_mm": 21.09,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:06:00",
+      "height_mm": 21.61,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:08:00",
+      "height_mm": 22.13,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:10:00",
+      "height_mm": 22.63,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:12:00",
+      "height_mm": 23.12,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:14:00",
+      "height_mm": 23.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:16:00",
+      "height_mm": 24.07,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:18:00",
+      "height_mm": 24.53,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:20:00",
+      "height_mm": 24.98,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:22:00",
+      "height_mm": 25.42,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:24:00",
+      "height_mm": 25.85,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:26:00",
+      "height_mm": 26.27,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:28:00",
+      "height_mm": 26.68,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:30:00",
+      "height_mm": 27.09,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:32:00",
+      "height_mm": 27.48,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:34:00",
+      "height_mm": 27.87,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:36:00",
+      "height_mm": 28.24,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:38:00",
+      "height_mm": 28.61,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:40:00",
+      "height_mm": 28.97,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:42:00",
+      "height_mm": 29.32,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:44:00",
+      "height_mm": 29.67,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:46:00",
+      "height_mm": 30.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:48:00",
+      "height_mm": 30.33,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:50:00",
+      "height_mm": 30.66,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:52:00",
+      "height_mm": 30.97,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:54:00",
+      "height_mm": 31.28,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:56:00",
+      "height_mm": 31.58,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 10:58:00",
+      "height_mm": 31.88,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:00:00",
+      "height_mm": 32.16,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:02:00",
+      "height_mm": 32.45,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:04:00",
+      "height_mm": 32.72,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:06:00",
+      "height_mm": 32.99,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:08:00",
+      "height_mm": 33.26,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:10:00",
+      "height_mm": 33.51,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:12:00",
+      "height_mm": 33.77,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:14:00",
+      "height_mm": 34.01,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:16:00",
+      "height_mm": 34.26,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:18:00",
+      "height_mm": 34.49,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:20:00",
+      "height_mm": 34.72,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:22:00",
+      "height_mm": 34.95,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:24:00",
+      "height_mm": 35.17,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:26:00",
+      "height_mm": 35.39,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:28:00",
+      "height_mm": 35.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:30:00",
+      "height_mm": 35.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:32:00",
+      "height_mm": 36.01,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:34:00",
+      "height_mm": 36.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:36:00",
+      "height_mm": 36.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:38:00",
+      "height_mm": 36.59,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:40:00",
+      "height_mm": 36.77,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:42:00",
+      "height_mm": 36.95,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:44:00",
+      "height_mm": 37.13,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:46:00",
+      "height_mm": 37.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:48:00",
+      "height_mm": 37.47,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:50:00",
+      "height_mm": 37.64,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:52:00",
+      "height_mm": 37.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:54:00",
+      "height_mm": 37.96,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:56:00",
+      "height_mm": 38.11,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 11:58:00",
+      "height_mm": 38.26,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:00:00",
+      "height_mm": 38.41,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:02:00",
+      "height_mm": 38.55,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:04:00",
+      "height_mm": 38.7,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:06:00",
+      "height_mm": 38.84,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:08:00",
+      "height_mm": 38.97,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:10:00",
+      "height_mm": 39.1,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:12:00",
+      "height_mm": 39.23,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:14:00",
+      "height_mm": 39.36,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:16:00",
+      "height_mm": 39.48,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:18:00",
+      "height_mm": 39.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:20:00",
+      "height_mm": 39.72,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:22:00",
+      "height_mm": 39.84,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:24:00",
+      "height_mm": 39.95,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:26:00",
+      "height_mm": 40.06,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:28:00",
+      "height_mm": 40.17,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:30:00",
+      "height_mm": 40.28,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:32:00",
+      "height_mm": 40.38,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:34:00",
+      "height_mm": 40.48,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:36:00",
+      "height_mm": 40.58,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:38:00",
+      "height_mm": 40.68,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:40:00",
+      "height_mm": 40.77,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:42:00",
+      "height_mm": 40.87,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:44:00",
+      "height_mm": 40.96,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:46:00",
+      "height_mm": 41.05,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:48:00",
+      "height_mm": 41.13,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:50:00",
+      "height_mm": 41.22,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:52:00",
+      "height_mm": 41.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:54:00",
+      "height_mm": 41.38,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:56:00",
+      "height_mm": 41.46,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 12:58:00",
+      "height_mm": 41.54,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:00:00",
+      "height_mm": 41.62,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:02:00",
+      "height_mm": 41.69,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:04:00",
+      "height_mm": 41.76,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:06:00",
+      "height_mm": 41.83,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:08:00",
+      "height_mm": 41.9,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:10:00",
+      "height_mm": 41.97,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:12:00",
+      "height_mm": 42.04,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:14:00",
+      "height_mm": 42.1,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:16:00",
+      "height_mm": 42.17,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:18:00",
+      "height_mm": 42.23,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:20:00",
+      "height_mm": 42.29,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:22:00",
+      "height_mm": 42.35,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:24:00",
+      "height_mm": 42.41,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:26:00",
+      "height_mm": 42.47,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:28:00",
+      "height_mm": 42.52,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:30:00",
+      "height_mm": 42.58,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:32:00",
+      "height_mm": 42.63,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:34:00",
+      "height_mm": 42.68,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:36:00",
+      "height_mm": 42.73,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:38:00",
+      "height_mm": 42.78,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:40:00",
+      "height_mm": 42.83,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:42:00",
+      "height_mm": 42.88,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:44:00",
+      "height_mm": 42.92,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:46:00",
+      "height_mm": 42.97,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:48:00",
+      "height_mm": 43.02,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:50:00",
+      "height_mm": 43.06,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:52:00",
+      "height_mm": 43.1,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:54:00",
+      "height_mm": 43.14,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:56:00",
+      "height_mm": 43.18,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 13:58:00",
+      "height_mm": 43.22,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:00:00",
+      "height_mm": 43.26,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:02:00",
+      "height_mm": 43.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:04:00",
+      "height_mm": 43.34,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:06:00",
+      "height_mm": 43.37,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:08:00",
+      "height_mm": 43.41,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:10:00",
+      "height_mm": 43.45,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:12:00",
+      "height_mm": 43.48,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:14:00",
+      "height_mm": 43.51,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:16:00",
+      "height_mm": 43.55,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:18:00",
+      "height_mm": 43.58,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:20:00",
+      "height_mm": 43.61,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:22:00",
+      "height_mm": 43.64,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:24:00",
+      "height_mm": 43.67,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:26:00",
+      "height_mm": 43.7,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:28:00",
+      "height_mm": 43.73,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:30:00",
+      "height_mm": 43.76,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:32:00",
+      "height_mm": 43.78,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:34:00",
+      "height_mm": 43.81,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:36:00",
+      "height_mm": 43.84,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:38:00",
+      "height_mm": 43.86,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:40:00",
+      "height_mm": 43.89,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:42:00",
+      "height_mm": 43.91,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:44:00",
+      "height_mm": 43.93,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:46:00",
+      "height_mm": 43.96,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:48:00",
+      "height_mm": 43.98,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:50:00",
+      "height_mm": 44.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:52:00",
+      "height_mm": 44.03,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:54:00",
+      "height_mm": 44.05,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:56:00",
+      "height_mm": 44.07,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 14:58:00",
+      "height_mm": 44.09,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:00:00",
+      "height_mm": 44.11,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:02:00",
+      "height_mm": 44.13,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:04:00",
+      "height_mm": 44.15,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:06:00",
+      "height_mm": 44.17,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:08:00",
+      "height_mm": 44.18,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:10:00",
+      "height_mm": 44.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:12:00",
+      "height_mm": 44.22,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:14:00",
+      "height_mm": 44.24,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:16:00",
+      "height_mm": 44.25,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:18:00",
+      "height_mm": 44.27,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:20:00",
+      "height_mm": 44.29,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:22:00",
+      "height_mm": 44.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:24:00",
+      "height_mm": 44.32,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:26:00",
+      "height_mm": 44.33,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:28:00",
+      "height_mm": 44.35,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:30:00",
+      "height_mm": 44.36,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:32:00",
+      "height_mm": 44.38,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:34:00",
+      "height_mm": 44.39,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:36:00",
+      "height_mm": 44.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:38:00",
+      "height_mm": 44.42,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:40:00",
+      "height_mm": 44.43,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:42:00",
+      "height_mm": 44.44,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:44:00",
+      "height_mm": 44.45,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:46:00",
+      "height_mm": 44.47,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:48:00",
+      "height_mm": 44.48,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:50:00",
+      "height_mm": 44.49,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:52:00",
+      "height_mm": 44.5,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:54:00",
+      "height_mm": 44.51,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:56:00",
+      "height_mm": 44.52,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 15:58:00",
+      "height_mm": 44.53,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:00:00",
+      "height_mm": 45.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:02:00",
+      "height_mm": 44.9,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:04:00",
+      "height_mm": 44.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:06:00",
+      "height_mm": 44.7,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:08:00",
+      "height_mm": 44.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:10:00",
+      "height_mm": 44.5,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:12:00",
+      "height_mm": 44.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:14:00",
+      "height_mm": 44.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:16:00",
+      "height_mm": 44.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:18:00",
+      "height_mm": 44.1,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:20:00",
+      "height_mm": 44.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:22:00",
+      "height_mm": 43.9,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:24:00",
+      "height_mm": 43.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:26:00",
+      "height_mm": 43.7,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:28:00",
+      "height_mm": 43.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:30:00",
+      "height_mm": 43.5,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:32:00",
+      "height_mm": 43.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:34:00",
+      "height_mm": 43.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:36:00",
+      "height_mm": 43.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:38:00",
+      "height_mm": 43.1,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:40:00",
+      "height_mm": 43.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:42:00",
+      "height_mm": 42.9,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:44:00",
+      "height_mm": 42.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:46:00",
+      "height_mm": 42.7,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:48:00",
+      "height_mm": 42.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:50:00",
+      "height_mm": 42.5,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:52:00",
+      "height_mm": 42.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:54:00",
+      "height_mm": 42.3,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:56:00",
+      "height_mm": 42.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 16:58:00",
+      "height_mm": 42.1,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:00:00",
+      "height_mm": 42.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:02:00",
+      "height_mm": 41.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:04:00",
+      "height_mm": 40.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:06:00",
+      "height_mm": 39.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:08:00",
+      "height_mm": 38.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:10:00",
+      "height_mm": 38.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:12:00",
+      "height_mm": 37.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:14:00",
+      "height_mm": 36.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:16:00",
+      "height_mm": 35.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:18:00",
+      "height_mm": 34.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:20:00",
+      "height_mm": 34.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:22:00",
+      "height_mm": 33.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:24:00",
+      "height_mm": 32.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:26:00",
+      "height_mm": 31.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:28:00",
+      "height_mm": 30.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:30:00",
+      "height_mm": 30.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:32:00",
+      "height_mm": 29.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:34:00",
+      "height_mm": 28.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:36:00",
+      "height_mm": 27.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:38:00",
+      "height_mm": 26.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:40:00",
+      "height_mm": 26.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:42:00",
+      "height_mm": 25.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:44:00",
+      "height_mm": 24.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:46:00",
+      "height_mm": 23.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:48:00",
+      "height_mm": 22.8,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:50:00",
+      "height_mm": 22.0,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:52:00",
+      "height_mm": 21.2,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:54:00",
+      "height_mm": 20.4,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:56:00",
+      "height_mm": 19.6,
+      "temperature_c": 26.0
+    },
+    {
+      "timestamp": "2026-05-20 17:58:00",
+      "height_mm": 18.8,
+      "temperature_c": 26.0
+    }
+  ]
+}

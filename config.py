@@ -32,7 +32,7 @@ T100_DETECTION_WINDOW_MINUTES: int = 10
 DATA_SOURCE_MODE: str = os.environ.get("DATA_SOURCE_MODE", "local")
 
 LOCAL_LOGS_DIR: Path = PROJECT_ROOT / "data" / "logs"
-LOCAL_METADATA_PATH: Path = PROJECT_ROOT / "data" / "metadata" / "sessions_metadata.csv"
+LOCAL_METADATA_PATH: Path = PROJECT_ROOT / "data" / "metadata" / "sessions_metadata.json"
 OUTPUTS_DIR: Path = PROJECT_ROOT / "outputs"
 
 GITHUB_RAW_BASE_URL: str = os.environ.get(
@@ -40,7 +40,7 @@ GITHUB_RAW_BASE_URL: str = os.environ.get(
     "https://raw.githubusercontent.com/<owner>/<repo>/<branch>",
 )
 GITHUB_LOGS_PATH: str = "data/logs"
-GITHUB_METADATA_PATH: str = "data/metadata/sessions_metadata.csv"
+GITHUB_METADATA_PATH: str = "data/metadata/sessions_metadata.json"
 
 POSSIBLE_HEIGHT_COLUMNS = (
     "height_mm",

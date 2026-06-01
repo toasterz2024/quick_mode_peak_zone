@@ -35,11 +35,9 @@ htmlcov/
 # Streamlit
 .streamlit/secrets.toml
 
-# Project data: do NOT commit real fermentation logs or generated outputs
-data/logs/*.json
+# Generated outputs (downloadable CSVs are produced on demand)
 outputs/*.csv
 outputs/*.json
 
 # Keep directory structure
-!data/logs/.gitkeep
 !outputs/.gitkeep
