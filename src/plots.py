@@ -72,45 +72,44 @@ def plot_height_with_events(
             layer="below",
             line_width=0,
         )
-        fig.add_annotation(
-            x=plateau_start,
-            y=1.02,
-            yref="paper",
-            text="peak plateau",
-            showarrow=False,
-            xanchor="left",
-            font={"size": 11, "color": "#2ca02c"},
-        )
 
+    events = []
     for key, color in _EVENT_COLORS.items():
         value = session_metrics.get(key)
         if value is None or pd.isna(value):
             continue
+        events.append((pd.Timestamp(value), key, color))
+    events.sort(key=lambda e: e[0])
+
+    label_tiers = [1.16, 1.10, 1.04, 1.12, 1.06]
+    for idx, (ts, key, color) in enumerate(events):
         fig.add_shape(
             type="line",
-            x0=value,
-            x1=value,
+            x0=ts,
+            x1=ts,
             y0=0,
             y1=1,
             yref="paper",
             line={"color": color, "dash": "dash"},
         )
         fig.add_annotation(
-            x=value,
-            y=1.0,
+            x=ts,
+            y=label_tiers[idx % len(label_tiers)],
             yref="paper",
             text=key,
             showarrow=False,
             xanchor="left",
-            yanchor="bottom",
+            yanchor="middle",
             font={"size": 10, "color": color},
+            bgcolor="rgba(255,255,255,0.85)",
+            borderpad=2,
         )
 
     fig.update_layout(
         xaxis_title="timestamp",
         yaxis_title="height_mm",
-        legend={"orientation": "h"},
-        margin={"t": 40, "b": 40, "l": 40, "r": 40},
+        legend={"orientation": "h", "y": -0.18},
+        margin={"t": 90, "b": 40, "l": 40, "r": 40},
     )
     return fig
 
