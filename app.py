@@ -489,7 +489,8 @@ def _add_session_tab(
         end_below_threshold_minutes=sidebar["end_below_minutes"],
     )
 
-    st.markdown("### Auto-extracted info")
+    session_date = df["timestamp"].iloc[0].strftime("%Y-%m-%d")
+    st.markdown(f"### Auto-extracted info  ·  _{session_date}_")
     c1, c2, c3 = st.columns(3)
     c1.metric("device_id", log_meta.get("device_id") or "—")
     c2.metric("mode", log_meta.get("mode") or "—")
@@ -499,12 +500,12 @@ def _add_session_tab(
     )
 
     c4, c5, c6 = st.columns(3)
-    c4.metric("start_time", str(log_meta.get("start_time") or "—"))
-    c5.metric("end_time", str(log_meta.get("end_time") or "—"))
-    c6.metric("t100_time", str(t100_time) if t100_time is not None else "not reached")
+    c4.metric("start_time", _fmt_time(log_meta.get("start_time")))
+    c5.metric("end_time", _fmt_time(log_meta.get("end_time")))
+    c6.metric("t100_time", _fmt_time(t100_time) if t100_time is not None else "not reached")
 
     c7, c8, c9 = st.columns(3)
-    c7.metric("real_peak_time (computed)", str(peak.get("real_peak_time") or "—"))
+    c7.metric("real_peak_time (computed)", _fmt_time(peak.get("real_peak_time")))
     c8.metric(
         "real_peak_height (computed)",
         f"{peak.get('real_peak_height'):.2f} mm" if peak.get("real_peak_height") else "—",
@@ -518,7 +519,7 @@ def _add_session_tab(
     if device_peak_time is not None or device_peak_height is not None:
         st.caption("Device-reported values (from the log's `heightAnalysis` section):")
         d1, d2, d3 = st.columns(3)
-        d1.metric("device peak_time", str(device_peak_time) if device_peak_time is not None else "—")
+        d1.metric("device peak_time", _fmt_time(device_peak_time))
         d2.metric(
             "device peak_height",
             f"{device_peak_height:.2f} mm" if device_peak_height is not None else "—",
@@ -604,6 +605,20 @@ def _fmt(value: Any) -> str:
         return "—"
     if isinstance(value, (int, float)):
         return f"{value:.2f}"
+    return str(value)
+
+
+def _fmt_time(value: Any) -> str:
+    """Format a Timestamp / datetime as ``HH:MM:SS`` (no date)."""
+    if value is None:
+        return "—"
+    try:
+        if pd.isna(value):
+            return "—"
+    except (TypeError, ValueError):
+        pass
+    if hasattr(value, "strftime"):
+        return value.strftime("%H:%M:%S")
     return str(value)
 
 
