@@ -111,6 +111,45 @@ def test_extract_log_metadata_missing_fields() -> None:
     assert info["start_time"] is not None
 
 
+def test_normalize_camelcase_real_device_log() -> None:
+    """Real device logs use camelCase: measuredAt, containerTemp, doughHeight…"""
+    raw = {
+        "deviceId": "SourFriend-A494",
+        "mode": "Auto",
+        "records": [
+            {
+                "stepIndex": 0,
+                "measuredAt": "2026-05-20T09:00:00Z",
+                "elapsedSeconds": 0,
+                "containerTemp": 26.0,
+                "ambientTemp": 22.5,
+                "humidity": 65,
+                "height": 18.0,
+                "lidOpen": False,
+                "isOutlier": False,
+            },
+            {
+                "stepIndex": 1,
+                "measuredAt": "2026-05-20T09:05:00Z",
+                "elapsedSeconds": 300,
+                "containerTemp": 26.1,
+                "ambientTemp": 22.6,
+                "height": 18.4,
+            },
+        ],
+    }
+    df = normalize_log_to_dataframe(raw, session_id="S_REAL")
+    assert "timestamp" in df.columns
+    assert "height_mm" in df.columns
+    assert "temperature_c" in df.columns
+    assert df["height_mm"].iloc[0] == 18.0
+    assert str(df["timestamp"].dt.tz) == "Asia/Seoul"
+
+    info = extract_log_metadata(raw, df)
+    assert info["device_id"] == "SourFriend-A494"
+    assert info["mode"] == "Auto"
+
+
 def test_merge_with_log_metadata_only_fills_missing() -> None:
     row = pd.Series(
         {

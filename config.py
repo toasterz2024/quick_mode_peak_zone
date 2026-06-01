@@ -48,6 +48,7 @@ POSSIBLE_HEIGHT_COLUMNS = (
     "current_height",
     "sensor_height",
     "measured_height",
+    "doughHeight",
 )
 
 POSSIBLE_TIMESTAMP_COLUMNS = (
@@ -56,10 +57,16 @@ POSSIBLE_TIMESTAMP_COLUMNS = (
     "created_at",
     "measured_at",
     "datetime",
+    "recorded_at",
+    "logged_at",
+    "at",
 )
 
 POSSIBLE_TEMPERATURE_COLUMNS = (
     "temperature_c",
+    "container_temp",
+    "ambient_temp",
+    "dough_temp",
     "temperature",
     "temp_c",
     "temp",
@@ -68,6 +75,8 @@ POSSIBLE_TEMPERATURE_COLUMNS = (
 POSSIBLE_STAGE_COLUMNS = (
     "stage",
     "step",
+    "step_index",
     "state",
     "phase",
+    "event_type",
 )

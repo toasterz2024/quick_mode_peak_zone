@@ -153,21 +153,19 @@ def extract_log_metadata(
     if isinstance(raw_json, dict):
         candidates.append(raw_json)
         for key in NESTED_METADATA_KEYS:
-            value = raw_json.get(key)
+            value = _lookup_field(raw_json, (key,))
             if isinstance(value, dict):
                 candidates.append(value)
 
     for src in candidates:
         if info["device_id"] is None:
-            for key in DEVICE_ID_KEYS:
-                if key in src and src[key]:
-                    info["device_id"] = str(src[key])
-                    break
+            value = _lookup_field(src, DEVICE_ID_KEYS)
+            if value is not None:
+                info["device_id"] = str(value)
         if info["mode"] is None:
-            for key in MODE_KEYS:
-                if key in src and src[key]:
-                    info["mode"] = str(src[key])
-                    break
+            value = _lookup_field(src, MODE_KEYS)
+            if value is not None:
+                info["mode"] = str(value)
 
     if df is not None and not df.empty and "timestamp" in df.columns:
         info["start_time"] = df["timestamp"].iloc[0]
@@ -316,7 +314,18 @@ def _extract_records(raw: Any) -> list[dict[str, Any]]:
         return raw
 
     if isinstance(raw, dict):
-        for key in ("records", "data", "log", "logs", "measurements", "history", "points"):
+        for key in (
+            "records",
+            "data",
+            "log",
+            "logs",
+            "measurements",
+            "history",
+            "points",
+            "events",
+            "samples",
+            "readings",
+        ):
             value = raw.get(key)
             if isinstance(value, list) and value and isinstance(value[0], dict):
                 return value
@@ -328,11 +337,31 @@ def _extract_records(raw: Any) -> list[dict[str, Any]]:
     return []
 
 
+def _normalize_name(name: str) -> str:
+    """Lowercase and strip underscores/hyphens for case-insensitive matching."""
+    return name.lower().replace("_", "").replace("-", "")
+
+
 def _find_column(df: pd.DataFrame, candidates: tuple[str, ...]) -> str | None:
-    lower_cols = {c.lower(): c for c in df.columns}
+    """Match a column name tolerant to camelCase / snake_case / hyphen-case."""
+    normalized = {_normalize_name(c): c for c in df.columns}
     for candidate in candidates:
-        if candidate in lower_cols:
-            return lower_cols[candidate]
+        key = _normalize_name(candidate)
+        if key in normalized:
+            return normalized[key]
+    return None
+
+
+def _lookup_field(src: dict[str, Any], candidates: tuple[str, ...]) -> Any:
+    """Same matching rules as ``_find_column`` but for plain dictionaries."""
+    if not isinstance(src, dict):
+        return None
+    normalized = {_normalize_name(str(k)): v for k, v in src.items() if isinstance(k, str)}
+    for candidate in candidates:
+        key = _normalize_name(candidate)
+        value = normalized.get(key)
+        if value not in (None, "", []):
+            return value
     return None
 
 
