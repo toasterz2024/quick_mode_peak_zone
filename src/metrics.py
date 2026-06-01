@@ -49,6 +49,11 @@ def calculate_session_metrics(
         "start_time": metadata_row.get("start_time"),
         "end_time": metadata_row.get("end_time"),
         "notes": _safe_str(metadata_row.get("notes")),
+        "device_reported_peak_time": metadata_row.get("device_reported_peak_time"),
+        "device_reported_peak_height": metadata_row.get("device_reported_peak_height"),
+        "device_reported_initial_height": metadata_row.get(
+            "device_reported_initial_height"
+        ),
         "real_peak_time": None,
         "real_peak_height": None,
         "peak_start_time": None,
@@ -117,7 +122,7 @@ def calculate_session_metrics(
             and peak_info["real_peak_time"] is not None
         ):
             diff = (
-                peak_info["real_peak_time"] - pd.Timestamp(manual_time)
+                pd.Timestamp(manual_time) - peak_info["real_peak_time"]
             ).total_seconds() / 60.0
             record["manual_to_real_peak_diff_minutes"] = float(diff)
 

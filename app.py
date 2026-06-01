@@ -192,7 +192,7 @@ def _apply_filters(
         filtered = filtered[filtered["validation_status"] == "invalid"]
     if only_after_peak:
         filtered = filtered[
-            filtered["manual_to_real_peak_diff_minutes"].fillna(0) < 0
+            filtered["manual_to_real_peak_diff_minutes"].fillna(0) > 0
         ]
     if only_no_row:
         filtered = filtered[
@@ -212,10 +212,10 @@ def _overview_tab(results_df: pd.DataFrame) -> None:
     valid_count = (results_df["validation_status"] == "valid").sum()
     invalid_count = (results_df["validation_status"] == "invalid").sum()
     before_peak = (
-        results_df["manual_to_real_peak_diff_minutes"].fillna(0) > 0
+        results_df["manual_to_real_peak_diff_minutes"].fillna(0) < 0
     ).sum()
     after_peak = (
-        results_df["manual_to_real_peak_diff_minutes"].fillna(0) < 0
+        results_df["manual_to_real_peak_diff_minutes"].fillna(0) > 0
     ).sum()
 
     c1, c2, c3, c4 = st.columns(4)
@@ -300,35 +300,48 @@ def _session_detail_tab(
     )
 
     st.markdown("### Timing comparison")
-    t1, t2, t3 = st.columns(3)
+    t1, t2, t3, t4 = st.columns(4)
     t1.metric(
         "manual Peak Zone entry",
         _fmt_time(record.get("manual_peakzone_entry_time")),
+        help="From sessions_metadata.json — when you observed the device fire Peak Zone.",
     )
     t2.metric(
-        "real peak time (computed)",
+        "real_peak_time (computed)",
         _fmt_time(record.get("real_peak_time")),
+        help="First timestamp in the log where height == max(height).",
+    )
+    t3.metric(
+        "device peakReachedAt",
+        _fmt_time(record.get("device_reported_peak_time")),
+        help="What the device itself wrote in heightAnalysis.peakReachedAt.",
     )
     diff_val = record.get("manual_to_real_peak_diff_minutes")
-    t3.metric(
+    t4.metric(
         "diff: manual − real peak (min)",
         _fmt(diff_val),
         help=(
-            "Negative = manual trigger BEFORE real peak (device decided early).\n"
-            "Positive = manual trigger AFTER real peak (device decided late)."
+            "Positive = manual trigger AFTER real peak (expected — Layer 2 normally fires after the peak).\n"
+            "Negative = manual trigger BEFORE real peak (unexpected — likely a wrong manual time)."
         ),
     )
     if diff_val is not None and not pd.isna(diff_val):
-        if diff_val < -0.5:
-            st.info(
-                f"Manual trigger fired **{abs(diff_val):.1f} min before** the real peak."
+        if diff_val > 0.5:
+            st.success(
+                f"Manual trigger fired **{diff_val:.1f} min after** the real peak — "
+                "expected behavior."
             )
-        elif diff_val > 0.5:
-            st.warning(
-                f"Manual trigger fired **{diff_val:.1f} min after** the real peak."
+        elif diff_val < -0.5:
+            st.error(
+                f"Manual trigger fired **{abs(diff_val):.1f} min BEFORE** the real "
+                "peak. Layer 2 cannot fire before the peak — verify the manual time."
             )
         else:
-            st.success("Manual trigger matched the real peak (within 30 s).")
+            st.warning(
+                "Manual trigger matched the real peak (within 30 s). This usually "
+                "means the recorded time is the **peak time**, not the **Peak Zone "
+                "alert time** (Layer 2 fires later than the peak, typically by 5–25 min)."
+            )
 
     if df is not None and not df.empty:
         st.plotly_chart(
@@ -523,28 +536,53 @@ def _add_session_tab(
 
     st.divider()
     st.markdown("### Set manual Peak Zone trigger time")
-    st.caption(
-        "Use the chart above to locate when the device/app reported Peak Zone entry. "
-        "By default we pre-fill the value with the calculated real peak time — adjust it."
+    st.warning(
+        "**This is NOT the peak time.** Peak Zone (Layer 2) fires AFTER the peak, "
+        "when firmware sees a stable plateau. Typical delay: **5–25 minutes after** "
+        "`real_peak_time`. Enter the exact moment you saw the device/app announce "
+        '"Peak Zone reached" — do not copy `peak_time`.'
     )
 
-    default_dt = (
-        log_meta.get("device_reported_peak_time")
-        or peak.get("real_peak_time")
-        or df["timestamp"].iloc[-1]
-    )
-    if hasattr(default_dt, "tz_convert"):
-        default_dt = default_dt.tz_convert(config.DEFAULT_TIMEZONE)
-    elif hasattr(default_dt, "tz_localize") and default_dt.tz is None:
-        default_dt = default_dt.tz_localize(config.DEFAULT_TIMEZONE)
+    real_peak_time_value = peak.get("real_peak_time")
+    if real_peak_time_value is not None:
+        st.caption(
+            f"For reference, the real peak was at "
+            f"**{_fmt_time(real_peak_time_value)}** — your trigger time should be "
+            f"_later_ than this."
+        )
+
+    last_ts = df["timestamp"].iloc[-1]
+    if hasattr(last_ts, "tz_convert"):
+        last_ts_local = last_ts.tz_convert(config.DEFAULT_TIMEZONE)
+    else:
+        last_ts_local = last_ts
 
     c_date, c_time = st.columns(2)
-    picked_date = c_date.date_input("Date", value=default_dt.date())
-    picked_time = c_time.time_input("Time", value=default_dt.time())
+    picked_date = c_date.date_input(
+        "Date",
+        value=last_ts_local.date(),
+        help="Date of the Peak Zone alert (defaults to log end date).",
+    )
+    picked_time = c_time.time_input(
+        "Time (HH:MM:SS)",
+        value=None,
+        help="REQUIRED. The moment device/app showed 'Peak Zone reached'.",
+    )
+
+    if picked_time is None:
+        st.info("Pick a time above to generate the JSON entry.")
+        return
 
     manual_trigger = pd.Timestamp.combine(
         picked_date, picked_time
     ).tz_localize(config.DEFAULT_TIMEZONE)
+
+    if real_peak_time_value is not None and manual_trigger <= real_peak_time_value:
+        st.error(
+            f"Manual trigger ({_fmt_time(manual_trigger)}) is at or before the real "
+            f"peak ({_fmt_time(real_peak_time_value)}). Layer 2 cannot fire before "
+            "the peak — double-check the time."
+        )
 
     notes_value = st.text_input("notes (optional)", value="")
 

@@ -291,15 +291,15 @@ When multiple timestamps share the same maximum, **always use the first**.
 
 ```python
 manual_to_real_peak_diff_minutes = (
-    real_peak_time - manual_peakzone_entry_time
+    manual_peakzone_entry_time - real_peak_time
 ).total_seconds() / 60
 ```
 
 | Value | Meaning |
 |---|---|
-| Positive | Manual trigger happened before real peak |
+| Positive | Manual trigger happened **after** real peak (expected — firmware sees stable plateau) |
 | Zero | Manual trigger matched real peak |
-| Negative | Manual trigger happened after real peak |
+| Negative | Manual trigger happened **before** real peak (unexpected — likely a wrong manual time) |
 
 ---
 
