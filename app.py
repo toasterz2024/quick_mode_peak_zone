@@ -60,7 +60,7 @@ def cached_process_session(
     peak_end_below_threshold_minutes: int,
     manual_trigger_tolerance_minutes: int,
 ) -> dict[str, Any]:
-    metadata_row = pd.read_json(metadata_row_json, typ="series")
+    metadata_row = pd.Series(json.loads(metadata_row_json))
     for col in (
         "start_time",
         "manual_peakzone_entry_time",
