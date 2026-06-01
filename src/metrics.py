@@ -88,7 +88,11 @@ def calculate_session_metrics(
     try:
         prepared = prepare_session_dataframe(df)
 
-        initial_height = calculate_initial_height(prepared)
+        device_initial = metadata_row.get("device_reported_initial_height")
+        if device_initial is not None and not pd.isna(device_initial) and device_initial > 0:
+            initial_height = float(device_initial)
+        else:
+            initial_height = calculate_initial_height(prepared)
         t100_time = calculate_t100_time(prepared, initial_height)
         record["initial_height"] = initial_height
         record["t100_time"] = t100_time

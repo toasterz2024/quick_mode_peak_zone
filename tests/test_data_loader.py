@@ -111,6 +111,62 @@ def test_extract_log_metadata_missing_fields() -> None:
     assert info["start_time"] is not None
 
 
+def test_real_sourfriend_log_structure() -> None:
+    """Match the actual SourFriend routine-log JSON: nested routineLog +
+    heightAnalysis sections, measurements array with camelCase fields."""
+    raw = {
+        "routineLog": {
+            "id": "80414c45-7720-429f-af67-8f874fec7282",
+            "routineMode": "auto",
+            "routineName": "Auto Mode",
+            "deviceSerial": "SFKV260401F4EB0513CFD0",
+            "deviceName": "SourFriend-F4EB",
+            "deviceModel": "SourFriend-F4EB",
+            "startedAt": "2026-05-27 15:49:54",
+            "endedAt": "2026-05-28 10:32:52",
+            "logTz": "Asia/Seoul",
+        },
+        "heightAnalysis": {
+            "initialHeight": 29,
+            "peakHeight": 67,
+            "peakReachedAt": "2026-05-27 23:17:15",
+        },
+        "measurements": [
+            {
+                "stepIndex": 0,
+                "measuredAt": "2026-05-27 15:50:26",
+                "elapsedSeconds": 0,
+                "containerTemp": 27.2,
+                "ambientTemp": 24.5,
+                "height": 0,
+                "isOutlier": True,
+            },
+            {
+                "stepIndex": 1,
+                "measuredAt": "2026-05-27 23:17:15",
+                "elapsedSeconds": 26841,
+                "containerTemp": 27.0,
+                "ambientTemp": 25.0,
+                "height": 67,
+                "isOutlier": False,
+            },
+        ],
+    }
+    df = normalize_log_to_dataframe(raw, session_id="S_SOURFRIEND")
+    assert len(df) == 2
+    assert "height_mm" in df.columns
+    assert "timestamp" in df.columns
+    assert "temperature_c" in df.columns
+
+    info = extract_log_metadata(raw, df)
+    assert info["device_id"] == "SFKV260401F4EB0513CFD0"
+    assert info["mode"] == "auto"
+    assert info["device_reported_peak_height"] == 67.0
+    assert info["device_reported_initial_height"] == 29.0
+    assert info["device_reported_peak_time"] is not None
+    assert str(info["device_reported_peak_time"].tz) == "Asia/Seoul"
+
+
 def test_normalize_camelcase_real_device_log() -> None:
     """Real device logs use camelCase: measuredAt, containerTemp, doughHeight…"""
     raw = {

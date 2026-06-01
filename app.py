@@ -474,7 +474,11 @@ def _add_session_tab(
         return
 
     log_meta = extract_log_metadata(raw, df)
-    initial_height = calculate_initial_height(df)
+    device_initial = log_meta.get("device_reported_initial_height")
+    if device_initial is not None and device_initial > 0:
+        initial_height = float(device_initial)
+    else:
+        initial_height = calculate_initial_height(df)
     t100_time = calculate_t100_time(df, initial_height)
     peak = get_real_peak(df, metadata_row=None)
     plateau = calculate_peak_plateau(
@@ -500,14 +504,31 @@ def _add_session_tab(
     c6.metric("t100_time", str(t100_time) if t100_time is not None else "not reached")
 
     c7, c8, c9 = st.columns(3)
-    c7.metric("real_peak_time", str(peak.get("real_peak_time") or "—"))
+    c7.metric("real_peak_time (computed)", str(peak.get("real_peak_time") or "—"))
     c8.metric(
-        "real_peak_height",
+        "real_peak_height (computed)",
         f"{peak.get('real_peak_height'):.2f} mm" if peak.get("real_peak_height") else "—",
     )
     c9.metric(
         "peak_duration (min)", _fmt(plateau.get("peak_duration_minutes"))
     )
+
+    device_peak_time = log_meta.get("device_reported_peak_time")
+    device_peak_height = log_meta.get("device_reported_peak_height")
+    if device_peak_time is not None or device_peak_height is not None:
+        st.caption("Device-reported values (from the log's `heightAnalysis` section):")
+        d1, d2, d3 = st.columns(3)
+        d1.metric("device peak_time", str(device_peak_time) if device_peak_time is not None else "—")
+        d2.metric(
+            "device peak_height",
+            f"{device_peak_height:.2f} mm" if device_peak_height is not None else "—",
+        )
+        d3.metric(
+            "device initial_height",
+            f"{log_meta.get('device_reported_initial_height'):.2f} mm"
+            if log_meta.get("device_reported_initial_height") is not None
+            else "—",
+        )
 
     chart_events = {
         "real_peak_time": peak.get("real_peak_time"),
@@ -524,9 +545,15 @@ def _add_session_tab(
         "By default we pre-fill the value with the calculated real peak time — adjust it."
     )
 
-    default_dt = peak.get("real_peak_time") or df["timestamp"].iloc[-1]
+    default_dt = (
+        log_meta.get("device_reported_peak_time")
+        or peak.get("real_peak_time")
+        or df["timestamp"].iloc[-1]
+    )
     if hasattr(default_dt, "tz_convert"):
         default_dt = default_dt.tz_convert(config.DEFAULT_TIMEZONE)
+    elif hasattr(default_dt, "tz_localize") and default_dt.tz is None:
+        default_dt = default_dt.tz_localize(config.DEFAULT_TIMEZONE)
 
     c_date, c_time = st.columns(2)
     picked_date = c_date.date_input("Date", value=default_dt.date())

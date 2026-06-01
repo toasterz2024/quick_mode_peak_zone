@@ -49,9 +49,39 @@ METADATA_TIMESTAMP_FIELDS = (
     "start_time",
 )
 
-DEVICE_ID_KEYS = ("device_id", "device", "device_name", "deviceId", "serial", "serial_number")
-MODE_KEYS = ("mode", "program", "recipe", "cycle", "fermentation_mode")
-NESTED_METADATA_KEYS = ("metadata", "meta", "info", "session", "device")
+DEVICE_ID_KEYS = (
+    "device_id",
+    "device_serial",
+    "serial_number",
+    "serial",
+    "device",
+    "device_name",
+    "device_model",
+)
+MODE_KEYS = (
+    "mode",
+    "routine_mode",
+    "routine_name",
+    "program",
+    "recipe",
+    "cycle",
+    "fermentation_mode",
+)
+NESTED_METADATA_KEYS = (
+    "metadata",
+    "meta",
+    "info",
+    "session",
+    "device",
+    "routine_log",
+    "routine",
+    "log",
+    "header",
+)
+DEVICE_PEAK_TIME_KEYS = ("peak_reached_at", "peakReachedAt", "peak_time")
+DEVICE_PEAK_HEIGHT_KEYS = ("peak_height",)
+DEVICE_INITIAL_HEIGHT_KEYS = ("initial_height",)
+HEIGHT_ANALYSIS_KEYS = ("height_analysis", "heightAnalysis", "peak_analysis")
 
 
 class DataLoadError(Exception):
@@ -147,6 +177,9 @@ def extract_log_metadata(
         "mode": None,
         "start_time": None,
         "end_time": None,
+        "device_reported_peak_time": None,
+        "device_reported_peak_height": None,
+        "device_reported_initial_height": None,
     }
 
     candidates: list[dict[str, Any]] = []
@@ -166,6 +199,31 @@ def extract_log_metadata(
             value = _lookup_field(src, MODE_KEYS)
             if value is not None:
                 info["mode"] = str(value)
+
+    if isinstance(raw_json, dict):
+        analysis = _lookup_field(raw_json, HEIGHT_ANALYSIS_KEYS)
+        if isinstance(analysis, dict):
+            peak_time_raw = _lookup_field(analysis, DEVICE_PEAK_TIME_KEYS)
+            if peak_time_raw is not None:
+                try:
+                    info["device_reported_peak_time"] = _normalize_timestamp_series(
+                        pd.Series([peak_time_raw]),
+                        assume_tz=LOG_TIMEZONE_IF_NAIVE,
+                    ).iloc[0]
+                except (ValueError, TypeError):
+                    pass
+            peak_height_raw = _lookup_field(analysis, DEVICE_PEAK_HEIGHT_KEYS)
+            if peak_height_raw is not None:
+                try:
+                    info["device_reported_peak_height"] = float(peak_height_raw)
+                except (ValueError, TypeError):
+                    pass
+            initial_raw = _lookup_field(analysis, DEVICE_INITIAL_HEIGHT_KEYS)
+            if initial_raw is not None:
+                try:
+                    info["device_reported_initial_height"] = float(initial_raw)
+                except (ValueError, TypeError):
+                    pass
 
     if df is not None and not df.empty and "timestamp" in df.columns:
         info["start_time"] = df["timestamp"].iloc[0]
