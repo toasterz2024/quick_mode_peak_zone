@@ -391,13 +391,35 @@ def _session_detail_tab(
     st.dataframe(pd.DataFrame(condition_rows), use_container_width=True)
 
 
+ALL_SESSIONS_VISIBLE_COLUMNS = (
+    "session_id",
+    "device_id",
+    "mode",
+    "start_time",
+    "end_time",
+    "notes",
+    "real_peak_time",
+    "real_peak_height",
+    "peak_duration_minutes",
+    "manual_peakzone_entry_time",
+    "manual_to_real_peak_diff_minutes",
+    "validation_status",
+    "failed_conditions_at_manual_entry",
+)
+
+
 def _all_sessions_tab(results_df: pd.DataFrame) -> None:
     st.subheader("All sessions")
     if results_df.empty:
         st.info("No sessions to display.")
         return
 
-    st.dataframe(results_df, use_container_width=True)
+    visible_cols = [c for c in ALL_SESSIONS_VISIBLE_COLUMNS if c in results_df.columns]
+    st.dataframe(results_df[visible_cols], use_container_width=True)
+    st.caption(
+        f"Showing {len(visible_cols)} of {len(results_df.columns)} columns. "
+        "The CSV download includes every column."
+    )
     csv = results_df.to_csv(index=False).encode("utf-8")
     st.download_button(
         "Download peakzone_validation_results.csv",
