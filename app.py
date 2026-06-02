@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -436,9 +437,15 @@ def _add_session_tab(
 
     registered: set[str] = set()
     if not metadata_df.empty and "log_file" in metadata_df.columns:
-        registered = {f for f in metadata_df["log_file"].dropna().tolist() if f}
+        registered = {
+            unicodedata.normalize("NFC", f)
+            for f in metadata_df["log_file"].dropna().tolist()
+            if f
+        }
 
-    unregistered = [f for f in all_logs if f not in registered]
+    unregistered = [
+        f for f in all_logs if unicodedata.normalize("NFC", f) not in registered
+    ]
     if not unregistered:
         st.success(
             "All logs in `data/logs/` are already registered. "
