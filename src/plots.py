@@ -114,57 +114,76 @@ def plot_height_with_events(
 
 
 def plot_peak_duration_by_session(results_df: pd.DataFrame) -> go.Figure:
-    """Bar chart of ``peak_duration_minutes`` per session."""
+    """Histogram of ``peak_duration_minutes`` across sessions."""
     fig = go.Figure()
     if results_df.empty or "peak_duration_minutes" not in results_df.columns:
         fig.update_layout(title="No data")
         return fig
+
+    values = (
+        pd.to_numeric(results_df["peak_duration_minutes"], errors="coerce").dropna()
+    )
+    if values.empty:
+        fig.update_layout(title="No data")
+        return fig
+
     fig.add_trace(
-        go.Bar(
-            x=results_df["session_id"],
-            y=results_df["peak_duration_minutes"],
-            marker_color="#2ca02c",
+        go.Histogram(
+            x=values,
+            nbinsx=20,
+            marker={"color": "#2ca02c", "line": {"color": "#fff", "width": 1}},
+            hovertemplate=(
+                "duration: %{x:.1f} min<br>sessions: %{y}<extra></extra>"
+            ),
         )
     )
     fig.update_layout(
-        xaxis_title="session_id",
-        yaxis_title="peak_duration_minutes",
-        margin={"t": 40, "b": 40, "l": 40, "r": 40},
+        title="Distribution of peak duration (min)",
+        xaxis_title="peak_duration_minutes",
+        yaxis_title="sessions",
+        bargap=0.05,
+        margin={"t": 50, "b": 40, "l": 40, "r": 40},
     )
     return fig
 
 
 def plot_manual_trigger_diff_by_session(results_df: pd.DataFrame) -> go.Figure:
-    """Bar chart of ``manual_to_real_peak_diff_minutes`` per session."""
+    """Histogram of ``manual_to_real_peak_diff_minutes`` across sessions."""
     fig = go.Figure()
     if results_df.empty or "manual_to_real_peak_diff_minutes" not in results_df.columns:
         fig.update_layout(title="No data")
         return fig
 
-    colors = [
-        "#1f77b4" if (v is not None and not pd.isna(v) and v >= 0) else "#d62728"
-        for v in results_df["manual_to_real_peak_diff_minutes"]
-    ]
+    values = (
+        pd.to_numeric(results_df["manual_to_real_peak_diff_minutes"], errors="coerce")
+        .dropna()
+    )
+    if values.empty:
+        fig.update_layout(title="No data")
+        return fig
+
     fig.add_trace(
-        go.Bar(
-            x=results_df["session_id"],
-            y=results_df["manual_to_real_peak_diff_minutes"],
-            marker_color=colors,
+        go.Histogram(
+            x=values,
+            nbinsx=20,
+            marker={"color": "#1f77b4", "line": {"color": "#fff", "width": 1}},
+            hovertemplate=(
+                "diff: %{x:.1f} min<br>sessions: %{y}<extra></extra>"
+            ),
         )
     )
-    fig.add_shape(
-        type="line",
-        x0=0,
-        x1=1,
-        y0=0,
-        y1=0,
-        xref="paper",
+    fig.add_vline(
+        x=0,
         line={"color": "#444", "dash": "dash"},
+        annotation_text="real peak",
+        annotation_position="top",
     )
     fig.update_layout(
-        xaxis_title="session_id",
-        yaxis_title="manual_to_real_peak_diff_minutes",
-        margin={"t": 40, "b": 40, "l": 40, "r": 40},
+        title="Distribution of manual − real peak (min)",
+        xaxis_title="manual_to_real_peak_diff_minutes",
+        yaxis_title="sessions",
+        bargap=0.05,
+        margin={"t": 50, "b": 40, "l": 40, "r": 40},
     )
     return fig
 
