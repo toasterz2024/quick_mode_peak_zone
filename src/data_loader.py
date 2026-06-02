@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import logging
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -88,6 +89,38 @@ class DataLoadError(Exception):
     """Raised when a data source cannot be located or parsed."""
 
 
+def _resolve_local_path(path: Path) -> Path | None:
+    """Resolve a local path, tolerating NFC/NFD Unicode normalization differences.
+
+    macOS APFS normalizes filenames transparently, but Linux filesystems (e.g. the
+    Streamlit Cloud runtime) match strictly by bytes. Files uploaded from macOS
+    are often stored in NFD form in the repo, while metadata is typically edited
+    in NFC. This helper tries both normalizations and a directory scan as a
+    final fallback so the same metadata works on every platform.
+    """
+    if path.exists():
+        return path
+
+    name = path.name
+    parent = path.parent if str(path.parent) else Path(".")
+
+    for form in ("NFC", "NFD"):
+        candidate = parent / unicodedata.normalize(form, name)
+        if candidate.exists():
+            return candidate
+
+    if parent.exists():
+        target_nfc = unicodedata.normalize("NFC", name)
+        try:
+            for entry in parent.iterdir():
+                if unicodedata.normalize("NFC", entry.name) == target_nfc:
+                    return entry
+        except OSError:
+            pass
+
+    return None
+
+
 def _fetch_text(location: str | Path, *, source_mode: str) -> str:
     """Return the textual contents of a file from local disk or GitHub raw."""
     if source_mode == "github_raw":
@@ -99,10 +132,10 @@ def _fetch_text(location: str | Path, *, source_mode: str) -> str:
             raise DataLoadError(f"GitHub fetch failed ({response.status_code}): {url}")
         return response.text
 
-    path = Path(location)
-    if not path.exists():
-        raise DataLoadError(f"Local file not found: {path}")
-    return path.read_text(encoding="utf-8")
+    resolved = _resolve_local_path(Path(location))
+    if resolved is None:
+        raise DataLoadError(f"Local file not found: {location}")
+    return resolved.read_text(encoding="utf-8")
 
 
 def load_metadata(
