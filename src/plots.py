@@ -12,7 +12,6 @@ _EVENT_COLORS = {
     "real_peak_time": "#d62728",
     "manual_peakzone_entry_time": "#1f77b4",
     "t100_time": "#9467bd",
-    "peak_start_time": "#2ca02c",
     "peak_end_time": "#ff7f0e",
 }
 
