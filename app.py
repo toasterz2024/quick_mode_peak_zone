@@ -332,9 +332,9 @@ def _session_detail_tab(
                 "expected behavior."
             )
         elif diff_val < -0.5:
-            st.error(
-                f"Manual trigger fired **{abs(diff_val):.1f} min BEFORE** the real "
-                "peak. Layer 2 cannot fire before the peak — verify the manual time."
+            st.info(
+                f"Manual trigger fired **{abs(diff_val):.1f} min before** the real "
+                "peak."
             )
         else:
             st.warning(
@@ -578,10 +578,9 @@ def _add_session_tab(
     ).tz_localize(config.DEFAULT_TIMEZONE)
 
     if real_peak_time_value is not None and manual_trigger <= real_peak_time_value:
-        st.error(
+        st.info(
             f"Manual trigger ({_fmt_time(manual_trigger)}) is at or before the real "
-            f"peak ({_fmt_time(real_peak_time_value)}). Layer 2 cannot fire before "
-            "the peak — double-check the time."
+            f"peak ({_fmt_time(real_peak_time_value)})."
         )
 
     notes_value = st.text_input("notes (optional)", value="")
