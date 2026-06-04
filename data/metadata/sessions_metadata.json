@@ -72,4 +72,9 @@
   "session_id": "routine-log_a5b30fc5-f712-4f1b-b4d7-a8f3a18a5a24_기본_예약모드_5단계__5_27_-2",
   "log_file": "routine-log_a5b30fc5-f712-4f1b-b4d7-a8f3a18a5a24_기본_예약모드_5단계__5_27_-2.json",
   "manual_peakzone_entry_time": "2026-06-01 20:41:00"
+},
+{
+  "session_id": "routine-log_90a51768-c95d-425e-8780-b64561e02a87_Auto_Mode",
+  "log_file": "routine-log_90a51768-c95d-425e-8780-b64561e02a87_Auto_Mode.json",
+  "manual_peakzone_entry_time": "2026-06-02 19:31:00"
 }]
